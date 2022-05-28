@@ -3,17 +3,14 @@ import cv2
 import pickle
 import struct
 
-# Client socket
-# create an INET, STREAMing socket :
+
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-host_ip = "192.168.1.3"
+host_ip = "localhost"
 port = 10050
-
 client_socket.connect((host_ip, port))
-
 data = b""
-
 payload_size = struct.calcsize("Q")
+
 while True:
     while len(data) < payload_size:
         packet = client_socket.recv(4 * 1024)
@@ -30,7 +27,7 @@ while True:
     frame = pickle.loads(frame_data)
     cv2.imshow("Receiving...", frame)
     key = cv2.waitKey(10)
-    if key == 13:
+    if key == ord("q"):
         break
 
 client_socket.close()

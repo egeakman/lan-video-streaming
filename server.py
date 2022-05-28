@@ -3,6 +3,7 @@ import cv2
 import pickle
 import struct
 
+
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host_name = socket.gethostname()
 host_ip = socket.gethostbyname(host_name)
@@ -17,17 +18,15 @@ print("Socket bind complete")
 server_socket.listen(5)
 print("Socket now listening")
 
+vid = cv2.VideoCapture(0)
+
+client_socket, addr = server_socket.accept()
+
 while True:
-    client_socket, addr = server_socket.accept()
+
     print("Connection from:", addr)
-    if client_socket:
-        vid = cv2.VideoCapture(0)
-        while vid.isOpened():
-            img, frame = vid.read()
-            a = pickle.dumps(frame)
-            message = struct.pack("Q", len(a)) + a
-            client_socket.sendall(message)
-            cv2.imshow("Sending...", frame)
-            key = cv2.waitKey(10)
-            if key == 13:
-                client_socket.close()
+
+    img, frame = vid.read()
+    a = pickle.dumps(frame)
+    message = struct.pack("Q", len(a)) + a
+    client_socket.sendall(message)
