@@ -23,9 +23,6 @@ vid = cv2.VideoCapture(0)
 client_socket, addr = server_socket.accept()
 
 while True:
-
-    print("Connection from:", addr)
-
     img, frame = vid.read()
     a = pickle.dumps(frame)
     message = struct.pack("Q", len(a)) + a
